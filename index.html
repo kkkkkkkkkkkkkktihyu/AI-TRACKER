@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>200-Day AIML Masterclass Tracker</title>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --accent-color: #3b82f6;
+            --success-color: #10b981;
+            --text-color: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #1e3a8a, #1e293b);
+            border-radius: 12px;
+            border: 1px solid #334155;
+        }
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            color: #60a5fa;
+        }
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .stat-card {
+            background-color: var(--card-bg);
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid #334155;
+            text-align: center;
+        }
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--accent-color);
+            margin-top: 5px;
+        }
+        .main-layout {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 30px;
+        }
+        @media (max-width: 768px) {
+            .main-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+        .phase-section {
+            background-color: var(--card-bg);
+            padding: 25px;
+            border-radius: 12px;
+            border: 1px solid #334155;
+            margin-bottom: 25px;
+        }
+        .phase-title {
+            font-size: 1.4rem;
+            color: #f43f5e;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .phase-meta {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            background: #0f172a;
+            padding: 4px 10px;
+            border-radius: 20px;
+        }
+        .task-list {
+            list-style: none;
+        }
+        .task-item {
+            display: flex;
+            align-items: flex-start;
+            padding: 12px 0;
+            border-bottom: 1px solid #334155;
+        }
+        .task-item:last-child {
+            border-bottom: none;
+        }
+        .task-checkbox {
+            width: 20px;
+            height: 20px;
+            margin-right: 15px;
+            margin-top: 2px;
+            cursor: pointer;
+            accent-color: var(--success-color);
+        }
+        .task-text strong {
+            color: #38bdf8;
+            display: block;
+            margin-bottom: 3px;
+        }
+        .task-text p {
+            font-size: 0.95rem;
+            color: #cbd5e1;
+        }
+        .sidebar-panel {
+            background-color: var(--card-bg);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid #334155;
+            height: fit-content;
+            position: sticky;
+            top: 20px;
+        }
+        .panel-title {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            color: #e2e8f0;
+            border-bottom: 2px solid #334155;
+            padding-bottom: 5px;
+        }
+        .reminder-box {
+            margin-bottom: 25px;
+        }
+        .btn {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            width: 100%;
+            transition: background 0.2s;
+        }
+        .btn:hover {
+            background-color: #2563eb;
+        }
+        .btn-success {
+            background-color: var(--success-color);
+        }
+        .btn-success:hover {
+            background-color: #059669;
+        }
+        .interview-box {
+            background: #0f172a;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #334155;
+            margin-bottom: 15px;
+        }
+        .interview-q {
+            font-size: 0.95rem;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #fbbf24;
+        }
+        .answer-input {
+            width: 100%;
+            height: 80px;
+            background: #1e293b;
+            border: 1px solid #475569;
+            color: white;
+            padding: 8px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            resize: none;
+        }
+        .reveal-btn {
+            background: none;
+            border: 1px dashed var(--text-muted);
+            color: var(--text-muted);
+            padding: 4px 8px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        .reveal-btn:hover {
+            color: white;
+            border-color: white;
+        }
+        .hidden-ans {
+            display: none;
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: #a7f3d0;
+            background: #064e3b;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .progress-bar-container {
+            background: #0f172a;
+            border-radius: 20px;
+            height: 12px;
+            width: 100%;
+            margin-top: 8px;
+            overflow: hidden;
+            border: 1px solid #334155;
+        }
+        .progress-bar-fill {
+            background: linear-gradient(90deg, #3b82f6, #10b981);
+            height: 100%;
+            width: 0%;
+            transition: width 0.4s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🚀 Your 200-Day Remote AIML Job Roadmap</h1>
+            <p class="subtitle">Zero Distractions. Complete Accountability. Earn in Dollars.</p>
+            <div class="progress-bar-container">
+                <div id="overall-progress" class="progress-bar-fill"></div>
+            </div>
+        </header>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div>Total Journey</div>
+                <div class="stat-value">200 Days</div>
+            </div>
+            <div class="stat-card">
+                <div>Tasks Completed</div>
+                <div id="stat-completed" class="stat-value">0 / 12</div>
+            </div>
+            <div class="stat-card">
+                <div>Target Compensation</div>
+                <div class="stat-value">$30k - $100k+</div>
+            </div>
+        </div>
+
+        <div class="main-layout">
+            <main>
+                <!-- Phase 1 -->
+                <div class="phase-section">
+                    <div class="phase-title">
+                        <span>Phase 1: Python Basics, Data Structures & Logic Core</span>
+                        <span class="phase-meta">Days 1 - 60</span>
+                    </div>
+                    <ul class="task-list">
+                        <li class="task-item">
+                            <input type="checkbox" class="task-checkbox" onchange="updateProgress()">
+                            <div class="task-text">
+                                <strong>Python Syntax & OOP Basics</strong>
+                                <p>Master functions, loops, lists, dicts, and Object-Oriented Programming rules.</p>
+                            </div>
+                        </li>
+                        <li class="task-item">
+                            <input type="checkbox" class="task-checkbox" onchange="updateProgress()">
+                            <div class="task-text">
+                                <strong>Data Engineering Fundamentals</strong>
+                                <p>Learn data filtering, cleaning, and transformation workflows using NumPy and Pandas.</p>
+                            </div>
+                        </li>
+                        <li class="task-item">
+                            <input type="checkbox" class="task-checkbox" onchange="updateProgress()">
+                            <div class="task-text">
+                                <strong>LeetCode Patterns (DSA)</strong>
+                                <p>Practice 1 hour daily focus on Arrays, Strings, HashMaps, and Two-Pointer logic tricks.</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Phase 2 -->
+                <div class="phase-section">
+                    <div class="phase-title">
+                        <span>Phase 2: Mathematical Infrastructure & Core ML Models</span>
+                        <span class="phase-meta">Days 61 - 120</span>
+                    </div>
+                    <ul class="task-list">
+                        <li class="task-item">
+                            <input type="checkbox" class="task-checkbox" onchange="updateProgress()">
+                            <div class="task-text">
+                                <strong>Applied Applied Mathematics</strong>
+                                <p>Linear Algebra operations, Calculus optimization (Gradient Descent), and probability distributions.</p>
+                            </div>
+                        </li>
+                        <li class="task-item">
+                            <input type="checkbox" class="task-checkbox" onchange="updateProgress()">
+                            <div class="task-text">
+                                <strong>Scikit-Learn Whiteboarding</strong>
+                                <p>Implement Regression, Decision Trees, and Random Forests. Learn to write pseudocode logic from memory.</p>
+                            </div>
+                        </li>
+                        <li class="task-item">
+                            <input type="checkbox" class="task-checkbox" onchange="updateProgress()">
+                            <div class="task-text">
+                                <strong>Pattern Identification Tests</strong>
+                                <p>Practice rapid matrix operations, logical deductions, and complex number series formats.</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Phase 3 -->
+                <div class="phase-section">
+                    <div class="phase-title">
+                        <span>Phase 3: Production Deep Learning & Generative AI Systems</span>
+                        <span class="phase-meta">Days 121 - 170</span>
+                    </div>
+                    <ul class="task-list">
+                        <li class="task-item">
+                            <input type="checkbox" class="task-checkbox" onchange="updateProgress()">
+                            <div class="task-text">
+                                <strong>PyTorch Deep Frameworks</strong>
+                                <p>Construct artificial neural networks, customize loss metrics, and tune hyper-parameters.</p>
+                            </div>
+                        </li>
+                        <li class="task-item">
+                            <input type="checkbox" class="task-checkbox" onchange="updateProgress()">
+                            <div class="task-text">
+                                <strong>Large Language Models & APIs</strong>
+                                <p>Deploy foundational models via Hugging Face and connect third-party endpoints efficiently.</p>
+                            </div>
+                        </li>
+                        <li class="task-item">
+                            <input type="checkbox" class="task-checkbox" onchange="updateProgress()">
+                            <div class="task-text">
+                                <strong>Enterprise RAG Architecture</strong>
+                                <p>Implement Vector Databases (Pinecone/Milvus) to supply context-aware inputs to custom bots.</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Phase 4 -->
+                <div class="phase-section">
+                    <div class="phase-title">
+                        <span>Phase 4: Enterprise MLOps & Remote Interview Mastery</span>
+                        <span class="phase-meta">Days 171 - 200</span>
+                    </div>
+                    <ul class="task-list">
+                        <li class="task-item">
+                            <input type="checkbox" class="task-checkbox" onchange="updateProgress()">
+                            <div class="task-text">
+                                <strong>API Development & Containers</strong>
+                                <p>Build lightweight web wrappers using FastAPI and isolate execution contexts using Docker containers.</p>
+                            </div>
+                        </li>
+                        <li class="task-item">
+                            <input type="checkbox" class="task-checkbox" onchange="updateProgress()">
+                            <div class="task-text">
+                                <strong>Production Portfolio Projects</strong>
+                                <p>Deploy 2 unique live end-to-end applications solving clear corporate problems onto cloud service hosting.</p>
+                            </div>
+                        </li>
+                        <li class="task-item">
+                            <input type="checkbox" class="task-checkbox" onchange="updateProgress()">
+                            <div class="task-text">
+                                <strong>Global Application Funnels</strong>
+                                <p>Submit portfolios across premium pipelines like Turing and Wellfound, while optimizing developer presentation files.</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </main>
+
+            <aside>
+                <div class="sidebar-panel reminder-box">
+                    <div class="panel-title">⏰ Anti-Distraction Alert</div>
+                    <p style="font-size: 0.9rem; margin-bottom: 12px; color: var(--text-muted);">Configure internal local notifications to ensure consistency.</p>
+                    <button class="btn" onclick="requestNotification()">Enable Alerts</button>
+                </div>
+
+                <div class="sidebar-panel">
+                    <div class="panel-title">🧠 Interview Logic Drill</div>
+                    
+                    <div class="interview-box">
+                        <div class="interview-q">Q1: What number replaces the question mark in the series: 2, 9, 28, 65, ?</div>
+                        <input type="text" class="answer-input" placeholder="Type your logical breakdown...">
+                        <button class="reveal-btn" onclick="toggleAns('ans1')">Reveal Solution Pattern</button>
+                        <div id="ans1" class="hidden-ans">Answer: 126. Pattern: n³ + 1. (1³+1=2, 2³+1=9, 3³+1=28, 4³+1=65, 5³+1=126)</div>
+                    </div>
+
+                    <div class="interview-box">
+                        <div class="interview-q">Q2: How would you architect a RAG model to safely digest multi-million row financial files?</div>
+                        <input type="text" class="answer-input" placeholder="Draft your system design concept...">
+                        <button class="reveal-btn" onclick="toggleAns('ans2')">Reveal System Design Strategy</button>
+                        <div id="ans2" class="hidden-ans">Strategy: Chunk the dataset using structural semantic boundary overlapping, embed items using high-dimensional engines, indexing via Vector DB utilizing local metadata filtering.</div>
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </div>
+
+    <script>
+        function updateProgress() {
+            const checkboxes = document.querySelectorAll('.task-checkbox');
+            const total = checkboxes.length;
+            let checkedCount = 0;
+            
+            checkboxes.forEach(box => {
+                if(box.checked) checkedCount++;
+            });
+            
+            const percent = (checkedCount / total) * 100;
+            document.getElementById('overall-progress').style.width = percent + '%';
+            document.getElementById('stat-completed').innerText = checkedCount + ' / ' + total;
+        }
+
+        function toggleAns(id) {
+            const el = document.getElementById(id);
+            if(el.style.display === 'block') {
+                el.style.display = 'none';
+            } else {
+                el.style.display = 'block';
+            }
+        }
+
+        function requestNotification() {
+            if (!("Notification" in window)) {
+                alert("This browser does not support system reminders.");
+            } else if (Notification.permission === "granted") {
+                alert("Reminders are already active! Stay locked into your 200-day execution.");
+                new Notification("AI/ML Blueprint Activated", { body: "4 Hours daily study sequence is currently live." });
+            } else if (Notification.permission !== "denied") {
+                Notification.requestPermission().then(permission => {
+                    if (permission === "granted") {
+                        new Notification("AI/ML Blueprint Activated", { body: "Track your targets flawlessly." });
+                    }
+                });
+            }
+        }
+    </script>
+</body>
+</html>
